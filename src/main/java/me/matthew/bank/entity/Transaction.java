@@ -1,0 +1,35 @@
+package me.matthew.bank.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "transactions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType type; // deposit, withdrawal, transfer, loan_payment, interest
+
+    private BigDecimal amount;
+    private BigDecimal balanceAfter;
+    private LocalDateTime createdAt;
+
+    private Long relatedTransferId; // optional, utaláshoz
+}
