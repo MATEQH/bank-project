@@ -1,0 +1,61 @@
+import { useNavigate } from "@tanstack/react-router";
+import { useAuth } from "../auth/use-auth.ts";
+
+export const Index = () => {
+    const {user, logout} = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        logout();
+        await navigate({to: "/auth/login"});
+    }
+
+    return (
+        <div className={"w-full min-h-dvh flex flex-col text-white gap-y-4"}>
+            <div className={"flex justify-between text-lg bg-green-500 p-2"}>
+                <h2>Dashboard</h2>
+                {/*<pre>{JSON.stringify(user, null, 2)}</pre>*/}
+                <div className={"flex items-center gap-x-2"}>
+                    <p className={"text-xs"}>Logged as ({user?.email})</p>
+                    <button className={"border border-white rounded-2xl py-1 px-2 text-sm"} onClick={handleLogout}>Logout</button>
+                </div>
+            </div>
+            {/*<p>{user?.accounts}</p>*/}
+            <div className={"flex flex-col gap-y-4 rounded-xl p-4 bg-green-500 mx-2"}>
+                <div>
+                    <h3 className={"text-2xl font-semibold"}>Accounts</h3>
+                    <p className={"text-xs"}>At here you can see your accounts.</p>
+                </div>
+                <div className={"flex flex-wrap gap-6"}>
+                    {user?.accounts?.map((account, index) => (
+                        <div className={"flex flex-col justify-center w-full max-w-sm border rounded-3xl bg-green-500 p-4 gap-y-4"} key={account.accountNumber ?? index}>
+                            <div className={"flex justify-between items-center"}>
+                                <div className={"flex items-center gap-x-2"}>
+                                    <h4 className={"font-semibold text-lg"}>Base account</h4>
+                                    <p className={"text-xs"}>(ACTIVE)</p>
+                                </div>
+                                <div className={"flex gap-x-1"}>
+                                    <p className={"font-semibold"}>Balance:</p>
+                                    <p className={""}>{account.currency} {account.balance}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p className={"font-semibold"}>Account number:</p>
+                                <p className={"text-sm"}>{account.accountNumber}</p>
+                            </div>
+                            <div className={"flex justify-between gap-x-2 items-center"}>
+                                <button className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-orange-500"}>Transfer</button>
+                                <div className={"flex gap-x-2 items-center"}>
+                                    <button className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-sky-400"}>Freeze</button>
+                                    <button className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-red-500"}>Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Index;
