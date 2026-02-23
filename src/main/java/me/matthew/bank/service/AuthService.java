@@ -1,14 +1,14 @@
 package me.matthew.bank.service;
 
 import me.matthew.bank.entity.User;
+import me.matthew.bank.repository.AccountRepository;
 import me.matthew.bank.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 @Service
@@ -16,37 +16,53 @@ public class AuthService {
     @Autowired
     private UserRepository userRepo;
     @Autowired
+    private AccountRepository accountRepo;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
-    @Autowired
-    private AuthenticationManager authManager;
 
-    public Map<String, String> register(String email, String password) {
+    public ResponseEntity<?> register(String email, String password) {
         if (userRepo.findByEmail(email).isPresent())
-            throw new RuntimeException("This email is already taken");
+            return ResponseEntity.status(409).body(Map.of("message", "This email is already taken"));
 
         var user = new User();
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-
         userRepo.save(user);
 
-        return Map.of("message", "User registered successfully");
+        return ResponseEntity.status(201).body(Map.of("message", "User registered successfully"));
     }
 
-    public Map<String, String> login(String email, String password) {
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+    public ResponseEntity<?> login(String email, String password) {
+        var user = userRepo.findByEmail(email).orElse(null);
 
-        var user = userRepo.findByEmail(email).orElseThrow();
-        String token = jwtService.generateToken(
-                new org.springframework.security.core.userdetails.User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        new ArrayList<>()
-                )
-        );
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid credentials"));
+        }
 
-        return Map.of("token", token);
+        String token = jwtService.generateToken(user.getEmail());
+        return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    public ResponseEntity<?> me(String token) {
+        String email = jwtService.extractEmail(token);
+
+        if (!jwtService.isTokenValid(token))
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+
+        var user = userRepo.findByEmail(email).orElse(null);
+        if (user == null)
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid token"));
+
+        var accounts = accountRepo.findByUser(user).orElse(Collections.emptyList());
+        var accountList = accounts.stream()
+                .map(acc -> Map.of(
+                        "accountNumber", acc.getAccountNumber(),
+                        "balance", acc.getBalance(),
+                        "currency", acc.getCurrency()
+                ))
+                .toList();
+        return ResponseEntity.ok(Map.of("email", email, "accounts", accountList));
     }
 }

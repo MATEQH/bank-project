@@ -1,7 +1,6 @@
 package me.matthew.bank.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import me.matthew.bank.entity.*;
 import me.matthew.bank.repository.AccountRepository;
 import me.matthew.bank.repository.TransactionRepository;

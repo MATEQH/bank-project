@@ -10,6 +10,6 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntime(RuntimeException e) {
-        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
     }
 }

@@ -1,11 +1,11 @@
 package me.matthew.bank.controller;
 
 import me.matthew.bank.service.AuthService;
+import me.matthew.bank.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -14,14 +14,23 @@ import java.util.Map;
 public class AuthController {
     @Autowired
     private AuthService authService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @PostMapping("/register")
-    public Map<String, String> register(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
         return authService.register(body.get("email"), body.get("password"));
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> body) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         return authService.login(body.get("email"), body.get("password"));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(@RequestParam String token) {
+        return authService.me(token);
     }
 }
