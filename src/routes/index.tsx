@@ -1,14 +1,28 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../auth/use-auth.ts";
+import { closeAccount } from "../auth/auth-api.ts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const Index = () => {
     const {user, logout} = useAuth();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const handleLogout = async () => {
         logout();
         await navigate({to: "/auth/login"});
     }
+
+    const closeMutation = useMutation({
+        mutationFn: async (accountNumber: string) => await closeAccount(accountNumber),
+        onError: async (error) => {
+            alert("Error: " + error.message)
+        },
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({queryKey: ["me"]});
+            alert(data.message)
+        }
+    });
 
     return (
         <div className={"w-full min-h-dvh flex flex-col text-white gap-y-4"}>
@@ -21,7 +35,7 @@ export const Index = () => {
                 </div>
             </div>
             {/*<p>{user?.accounts}</p>*/}
-            <div className={"flex flex-col gap-y-4 rounded-xl p-4 bg-green-500 mx-2"}>
+            <div className={"flex flex-col gap-y-4 rounded-xl p-4 bg-green-500 mx-2 w-full max-w-4xl"}>
                 <div>
                     <h3 className={"text-2xl font-semibold"}>Accounts</h3>
                     <p className={"text-xs"}>At here you can see your accounts.</p>
@@ -47,7 +61,12 @@ export const Index = () => {
                                 <button className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-orange-500"}>Transfer</button>
                                 <div className={"flex gap-x-2 items-center"}>
                                     <button className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-sky-400"}>Freeze</button>
-                                    <button className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-red-500"}>Close</button>
+                                    <button
+                                        className={"w-fit text-xs border border-white rounded-md py-1 px-2 bg-red-500"}
+                                        onClick={() => {
+                                            closeMutation.mutate(account.accountNumber);
+                                        }}
+                                    >Close</button>
                                 </div>
                             </div>
                         </div>

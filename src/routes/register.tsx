@@ -3,13 +3,26 @@ import { useMutation } from "@tanstack/react-query";
 import { registerRequest } from "../auth/auth-api.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 
+export interface RegisterCredentials {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    password_confirm: string;
+}
+
 export const Register = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [credentials, setCredentials] = useState<RegisterCredentials>({
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        password_confirm: ""
+    });
     const navigate = useNavigate();
 
     const mutation = useMutation({
-        mutationFn: async () => await registerRequest(email, password),
+        mutationFn: async () => await registerRequest(credentials),
         onError: async (error) => {
           alert("Error: " + error.message)
         },
@@ -31,6 +44,27 @@ export const Register = () => {
                     <p>At here you can create a new bank account</p>
                 </div>
 
+                <div className={""}>
+                    <div className={"flex flex-col gap-y-2"}>
+                        <label htmlFor={"first_name"}>First name</label>
+                        <input
+                            className={"border rounded-lg h-8 pl-2 text-gray-600"}
+                            id={"first_name"}
+                            placeholder={"example@gmail.com"}
+                            onChange={(e) => setCredentials({...credentials, first_name: e.target.value})}
+                        />
+                    </div>
+                    <div className={"flex flex-col gap-y-2"}>
+                        <label htmlFor={"last_name"}>Last name</label>
+                        <input
+                            className={"border rounded-lg h-8 pl-2 text-gray-600"}
+                            id={"last_name"}
+                            placeholder={"example@gmail.com"}
+                            onChange={(e) => setCredentials({...credentials, last_name: e.target.value})}
+                        />
+                    </div>
+                </div>
+
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"email"}>Email</label>
                     <input
@@ -38,7 +72,7 @@ export const Register = () => {
                         id={"email"}
                         type={"email"}
                         placeholder={"example@gmail.com"}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setCredentials({...credentials, email: e.target.value})}
                     />
                 </div>
 
@@ -49,7 +83,7 @@ export const Register = () => {
                         id={"password"}
                         type={"password"}
                         placeholder={"***********"}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setCredentials({...credentials, password: e.target.value})}
                     />
                 </div>
 
@@ -60,7 +94,7 @@ export const Register = () => {
                         id={"password_confirm"}
                         type={"password"}
                         placeholder={"***********"}
-                        //onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setCredentials({...credentials, password_confirm: e.target.value})}
                     />
                 </div>
 

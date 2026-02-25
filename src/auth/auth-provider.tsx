@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!token) return null;
 
       try {
-        const res = await api.get("/auth/me?token=" + token);
+        const res = await api.get("/auth/me");
         return res.data;
       } catch {
         return null;

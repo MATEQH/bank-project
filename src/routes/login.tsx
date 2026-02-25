@@ -4,15 +4,21 @@ import { loginRequest } from "../auth/auth-api.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../auth/use-auth.ts";
 
+export interface LoginCredentials {
+    email: string;
+    password: string;
+}
+
 export const Login = () => {
+    const [credentials, setCredentials] = useState<LoginCredentials>({
+        email: "",
+        password: ""
+    });
     const {login} = useAuth();
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
     const mutation = useMutation({
-        mutationFn: async () => await loginRequest(email, password),
+        mutationFn: async () => await loginRequest(credentials),
         onError: async (error) => {
             alert("Error: " + error.message)
         },
@@ -42,7 +48,7 @@ export const Login = () => {
                         id={"email"}
                         type={"email"}
                         placeholder={"example@gmail.com"}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setCredentials({...credentials, email: e.target.value})}
                     />
                 </div>
 
@@ -56,7 +62,7 @@ export const Login = () => {
                         id={"password"}
                         type={"password"}
                         placeholder={"***********"}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={(e) => setCredentials({...credentials, password: e.target.value})}
                     />
                 </div>
 
