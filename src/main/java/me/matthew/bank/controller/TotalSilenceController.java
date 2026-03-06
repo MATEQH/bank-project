@@ -8,10 +8,11 @@ import java.io.IOException;
 
 @Controller
 public class TotalSilenceController implements org.springframework.boot.webmvc.error.ErrorController {
-    @RequestMapping("/error")
-    public void handleAllErrors(HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        response.setContentLength(0);
-        response.flushBuffer();
-    }
+//    @RequestMapping("/error")
+//    public void handleAllErrors(HttpServletResponse response) throws IOException {
+//        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//        response.setContentLength(0);
+//        response.flushBuffer();
+//        System.out.println("hogy jut ide????");
+//    }
 }
