@@ -12,16 +12,16 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-api.interceptors.response.use(
-    (res) => res,
-    (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem("token");
-            window.location.href = "/auth/login";
-        }
-
-        return Promise.reject(error);
-    }
-);
+// api.interceptors.response.use(
+//     (res) => res,
+//     (error) => {
+//         if (error.response?.status === 401) {
+//             localStorage.removeItem("token");
+//             window.location.href = "/auth/login";
+//         }
+//
+//         return Promise.reject(error);
+//     }
+// );
 
 export default api;

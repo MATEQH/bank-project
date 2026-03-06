@@ -6,7 +6,7 @@ import api from "../api/client";
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const queryClient = useQueryClient();
 
-  const { data: user, isLoading, refetch } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ["me"],
     queryFn: async () => {
       const token = localStorage.getItem("token");
@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const res = await api.get("/auth/me");
         return res.data;
       } catch {
+        localStorage.removeItem("token");
         return null;
       }
     },
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (token: string) => {
     localStorage.setItem("token", token);
-    await refetch();
+    await queryClient.invalidateQueries({queryKey: ["me"]});
   };
 
   const logout = async () => {

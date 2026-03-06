@@ -2,65 +2,68 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { registerRequest } from "../auth/auth-api.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
+import type { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
-export interface RegisterCredentials {
-    first_name: string;
-    last_name: string;
+export type RegisterCredentials = {
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    password_confirm: string;
+    passwordConfirm: string;
 }
 
 export const Register = () => {
     const [credentials, setCredentials] = useState<RegisterCredentials>({
-        first_name: "",
-        last_name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
-        password_confirm: ""
+        passwordConfirm: ""
     });
     const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: async () => await registerRequest(credentials),
-        onError: async (error) => {
-          alert("Error: " + error.message)
+        onError: async (error: AxiosError<{message: string}>) => {
+            toast.error(error.response?.data?.message || "An error occurred");
         },
         onSuccess: async () => {
+            toast.success("You have successfully registered.");
             await navigate({ to: "/auth/login" });
         }
     })
 
     return (
-        <div className={"w-full min-h-dvh flex justify-center items-center px-2 text-white"}>
+        <div className={"w-full min-h-dvh flex justify-center items-center px-2"}>
             <form
-                className={"w-full max-w-md md:max-w-xl flex flex-col gap-y-4 bg-green-500 p-8 rounded-3xl"}
+                className={"w-full max-w-md md:max-w-xl flex flex-col gap-y-4 bg-white p-8 rounded-3xl font-mono"}
                 onSubmit={(e) => {
                     e.preventDefault();
                     mutation.mutate();
                 }}>
-                <div className={"flex flex-col items-center text-center"}>
-                    <h2 className={"text-4xl font-semibold self-center uppercase"}>Bank Project</h2>
+                <div className={"flex flex-col items-center text-center border-b pb-4"}>
+                    <h2 className={"text-4xl font-semibold self-center uppercase"}>Your Bank</h2>
                     <p>At here you can create a new bank account</p>
                 </div>
 
-                <div className={""}>
-                    <div className={"flex flex-col gap-y-2"}>
-                        <label htmlFor={"first_name"}>First name</label>
+                <div className={"flex flex-col md:flex-row md:justify-between md:gap-x-4 gap-y-4"}>
+                    <div className={"w-full flex flex-col gap-y-2"}>
+                        <label htmlFor={"firstName"}>First name</label>
                         <input
-                            className={"border rounded-lg h-8 pl-2 text-gray-600"}
-                            id={"first_name"}
-                            placeholder={"example@gmail.com"}
-                            onChange={(e) => setCredentials({...credentials, first_name: e.target.value})}
+                            className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                            id={"firstName"}
+                            placeholder={"Matthew"}
+                            onChange={(e) => setCredentials({...credentials, firstName: e.target.value})}
                         />
                     </div>
-                    <div className={"flex flex-col gap-y-2"}>
-                        <label htmlFor={"last_name"}>Last name</label>
+                    <div className={"w-full flex flex-col gap-y-2"}>
+                        <label htmlFor={"lastName"}>Last name</label>
                         <input
-                            className={"border rounded-lg h-8 pl-2 text-gray-600"}
-                            id={"last_name"}
-                            placeholder={"example@gmail.com"}
-                            onChange={(e) => setCredentials({...credentials, last_name: e.target.value})}
+                            className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                            id={"lastName"}
+                            placeholder={"Miller"}
+                            onChange={(e) => setCredentials({...credentials, lastName: e.target.value})}
                         />
                     </div>
                 </div>
@@ -68,10 +71,10 @@ export const Register = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"email"}>Email</label>
                     <input
-                        className={"border rounded-lg h-8 pl-2 text-gray-600"}
+                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
                         id={"email"}
                         type={"email"}
-                        placeholder={"example@gmail.com"}
+                        placeholder={"matthew.miller@gmail.com"}
                         onChange={(e) => setCredentials({...credentials, email: e.target.value})}
                     />
                 </div>
@@ -79,7 +82,7 @@ export const Register = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"password"}>Password</label>
                     <input
-                        className={"border rounded-lg h-8 pl-2 text-gray-600"}
+                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
                         id={"password"}
                         type={"password"}
                         placeholder={"***********"}
@@ -88,17 +91,17 @@ export const Register = () => {
                 </div>
 
                 <div className={"flex flex-col gap-y-2"}>
-                    <label htmlFor={"password_confirm"}>Password confirm</label>
+                    <label htmlFor={"passwordConfirm"}>Password confirm</label>
                     <input
-                        className={"border rounded-lg h-8 pl-2 text-gray-600"}
-                        id={"password_confirm"}
+                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                        id={"passwordConfirm"}
                         type={"password"}
                         placeholder={"***********"}
-                        onChange={(e) => setCredentials({...credentials, password_confirm: e.target.value})}
+                        onChange={(e) => setCredentials({...credentials, passwordConfirm: e.target.value})}
                     />
                 </div>
 
-                <button className={"border rounded-2xl h-8 font-semibold transition-all duration-300 hover:scale-95 mt-8"} disabled={mutation.isPending}>
+                <button className={"bg-green-500 border rounded-2xl h-10 font-semibold transition-all duration-300 hover:scale-95 mt-8 text-white"} disabled={mutation.isPending}>
                     {mutation.isPending ? "Loading..." : "Register"}
                 </button>
                 <span className={"text-center"}>You already have an account? <Link className={"hover:underline"} to={"/auth/login"}>Click here</Link></span>

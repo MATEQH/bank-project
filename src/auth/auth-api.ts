@@ -2,19 +2,21 @@ import api from "../api/client.ts";
 import type { RegisterCredentials } from "../routes/register.tsx";
 import type { LoginCredentials } from "../routes/login.tsx";
 
-export interface User {
+export type User = {
+    firstName: string;
+    lastName: string;
     email: string;
     accounts: Account[];
 }
 
-interface Account {
+type Account = {
     accountNumber: string;
     balance: number;
     currency: string;
 }
 
 export const loginRequest = async (credentials: LoginCredentials) => {
-    const res = await api.post("/auth/login", credentials);
+    const res = await api.post("/auth/login", {...credentials});
     if (res.data.error) {
         throw new Error(res.data.error);
     }
@@ -22,7 +24,7 @@ export const loginRequest = async (credentials: LoginCredentials) => {
 }
 
 export const registerRequest = async (credentials: RegisterCredentials) => {
-    const res = await api.post("/auth/register", credentials);
+    const res = await api.post("/auth/register", {...credentials});
     if (res.data.error) {
         throw new Error(res.data.error);
     }

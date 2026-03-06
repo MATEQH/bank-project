@@ -1,7 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../auth/use-auth.ts";
-import { closeAccount } from "../auth/auth-api.ts";
+import { closeAccount, createAccount } from "../auth/auth-api.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 export const Index = () => {
     const {user, logout} = useAuth();
@@ -13,14 +15,25 @@ export const Index = () => {
         await navigate({to: "/auth/login"});
     }
 
-    const closeMutation = useMutation({
-        mutationFn: async (accountNumber: string) => await closeAccount(accountNumber),
-        onError: async (error) => {
-            alert("Error: " + error.message)
+    const createMutation = useMutation({
+        mutationFn: async () => await createAccount(),
+        onError: async (error: AxiosError<{message: string}>) => {
+            toast.error(error.response?.data?.message || "An error occurred");
         },
         onSuccess: async (data) => {
             await queryClient.invalidateQueries({queryKey: ["me"]});
-            alert(data.message)
+            toast.success(data?.message);
+        }
+    });
+
+    const closeMutation = useMutation({
+        mutationFn: async (accountNumber: string) => await closeAccount(accountNumber),
+        onError: async (error: AxiosError<{message: string}>) => {
+            toast.error(error.response?.data?.message || "An error occurred");
+        },
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({queryKey: ["me"]});
+            toast.success(data?.message);
         }
     });
 
@@ -30,15 +43,25 @@ export const Index = () => {
                 <h2>Dashboard</h2>
                 {/*<pre>{JSON.stringify(user, null, 2)}</pre>*/}
                 <div className={"flex items-center gap-x-2"}>
-                    <p className={"text-xs"}>Logged as ({user?.email})</p>
+                    <p className={"text-xs"}>Welcome, {user?.firstName} {user?.lastName}!</p>
                     <button className={"border border-white rounded-2xl py-1 px-2 text-sm"} onClick={handleLogout}>Logout</button>
                 </div>
             </div>
             {/*<p>{user?.accounts}</p>*/}
             <div className={"flex flex-col gap-y-4 rounded-xl p-4 bg-green-500 mx-2 w-full max-w-4xl"}>
-                <div>
-                    <h3 className={"text-2xl font-semibold"}>Accounts</h3>
-                    <p className={"text-xs"}>At here you can see your accounts.</p>
+                <div className={"flex items-center justify-between"}>
+                    <div>
+                        <h3 className={"text-2xl font-semibold"}>Accounts</h3>
+                        <p className={"text-xs"}>At here you can see your accounts.</p>
+                    </div>
+                    <div>
+                        <button
+                            className={"border rounded-xl py-1 px-2 text-sm hover:scale-105"}
+                            onClick={() => {
+                                createMutation.mutate();
+                            }}
+                        >Create +</button>
+                    </div>
                 </div>
                 <div className={"flex flex-wrap gap-6"}>
                     {user?.accounts?.map((account, index) => (

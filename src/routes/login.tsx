@@ -3,8 +3,10 @@ import { useMutation } from "@tanstack/react-query";
 import { loginRequest } from "../auth/auth-api.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../auth/use-auth.ts";
+import type { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
-export interface LoginCredentials {
+export type LoginCredentials = {
     email: string;
     password: string;
 }
@@ -19,32 +21,33 @@ export const Login = () => {
 
     const mutation = useMutation({
         mutationFn: async () => await loginRequest(credentials),
-        onError: async (error) => {
-            alert("Error: " + error.message)
+        onError: async (error: AxiosError<{message: string}>) => {
+            toast.error(error.response?.data?.message || "An error occurred");
         },
         onSuccess: async (data) => {
+            toast.success("You are now logged in");
             await login(data.token);
             await navigate({to: "/"});
         }
     });
 
     return (
-        <div className={"w-full min-h-dvh flex justify-center items-center px-2 text-white"}>
+        <div className={"w-full min-h-dvh flex justify-center items-center px-2"}>
             <form
-                className={"w-full max-w-md md:max-w-xl flex flex-col gap-y-4 bg-green-500 p-8 rounded-3xl"}
+                className={"w-full max-w-md md:max-w-xl flex flex-col gap-y-4 bg-white p-8 rounded-3xl font-mono"}
                 onSubmit={(e) => {
                     e.preventDefault();
                     mutation.mutate();
                 }}>
-                <div className={"flex flex-col items-center text-center"}>
-                    <h2 className={"text-4xl font-semibold self-center uppercase"}>Bank Project</h2>
+                <div className={"flex flex-col items-center text-center border-b pb-4"}>
+                    <h2 className={"text-4xl font-semibold self-center uppercase"}>Your Bank</h2>
                     <p>At here you can login to your bank account</p>
                 </div>
 
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"email"}>Email</label>
                     <input
-                        className={"border rounded-lg h-8 pl-2 text-gray-600"}
+                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
                         id={"email"}
                         type={"email"}
                         placeholder={"example@gmail.com"}
@@ -55,10 +58,10 @@ export const Login = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <div className={"flex justify-between"}>
                         <label htmlFor={"password"}>Password</label>
-                        <span className={"text-xs place-self-end hover:underline cursor-pointer"}>Forgot your password?</span>
+                        <span className={"text-xs place-self-end hover:underline cursor-pointer text-green-500"}>Forgot your password?</span>
                     </div>
                     <input
-                        className={"border rounded-lg h-8 pl-2 text-gray-600"}
+                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
                         id={"password"}
                         type={"password"}
                         placeholder={"***********"}
@@ -66,10 +69,13 @@ export const Login = () => {
                     />
                 </div>
 
-                <button className={"border rounded-2xl h-8 font-semibold transition-all duration-300 hover:scale-95 mt-8"} disabled={mutation.isPending}>
+                <button
+                    className={"bg-green-500 border rounded-2xl h-10 font-semibold transition-all duration-300 hover:scale-95 mt-8 text-white"}
+                    disabled={mutation.isPending}>
                     {mutation.isPending ? "Loading..." : "Login"}
                 </button>
-                <span className={"text-center"}>You don't have account? <Link className={"hover:underline"} to={"/auth/register"}>Click here</Link></span>
+                <span className={"text-center"}>You don't have account? <Link className={"hover:underline"}
+                                                                              to={"/auth/register"}>Click here</Link></span>
             </form>
         </div>
     );
