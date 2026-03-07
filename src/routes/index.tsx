@@ -6,6 +6,8 @@ import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { Navbar } from "../components/Navbar.tsx";
 import { Accounts } from "../components/Accounts.tsx";
+import { RecommendForYou } from "../components/RecommendForYou.tsx";
+import { ExpensesAndTransactions } from "../components/ExpensesAndTransactions.tsx";
 
 export const Index = () => {
     const {logout} = useAuth();
@@ -43,6 +45,8 @@ export const Index = () => {
         <div className={"w-full min-h-dvh flex flex-col text-white gap-y-10 px-2 sm:px-8 md:px-16 lg:px-24 xl:px-48 pt-4 pb-8"}>
             <Navbar />
             <Accounts />
+            <RecommendForYou />
+            <ExpensesAndTransactions />
         </div>
     );
 };

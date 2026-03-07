@@ -1,5 +1,5 @@
 import { useAuth } from "../auth/use-auth.ts";
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosAddCircleOutline, IoIosArrowForward } from "react-icons/io";
 import { Link } from "@tanstack/react-router";
 import { GiTakeMyMoney } from "react-icons/gi";
 
@@ -13,7 +13,7 @@ export const Accounts = () => {
                 <p className={"text-sm text-gray-400"}>Current accounts</p>
                 <div className={"flex flex-wrap md:flex-nowrap gap-6"}>
                     {user?.accounts?.map((account, index) => (
-                        <div className={"flex flex-col justify-center w-full md:max-w-sm rounded-3xl bg-zinc-600 p-4 gap-y-4"} key={account.accountNumber ?? index}>
+                        <div className={"flex flex-col justify-center w-full rounded-3xl bg-zinc-600 p-4 gap-y-4"} key={account.accountNumber ?? index}>
                             <div className={"flex flex-col justify-between"}>
                                 <h3 className={"mb-3"}>Base Account</h3>
                                 <p className={"text-2xl font-bold"}>{account.balance} {account.currency}</p>
@@ -25,25 +25,48 @@ export const Accounts = () => {
                             </Link>
                         </div>
                     ))}
-                    {user?.accounts?.map((account, index) => (
-                        <div className={"flex flex-col justify-center w-full md:max-w-sm rounded-3xl bg-zinc-600 p-4 gap-y-4"} key={account.accountNumber ?? index}>
-                            <div className={"flex flex-col justify-between"}>
-                                <h3 className={"mb-3"}>Base Account</h3>
-                                <p className={"text-2xl font-bold"}>{account.balance} {account.currency}</p>
-                                <p className={"text-sm text-gray-400"}>{account.accountNumber}</p>
+                    {(user?.accounts && user.accounts.length < 2) && (
+                        <div className={"flex flex-col justify-center items-center w-full rounded-3xl bg-zinc-600 p-4 gap-y-4"}>
+                            {/*<IoIosAddCircleOutline size={64} className={"text-green-500"} />*/}
+                            <div className={"text-center space-y-2"}>
+                                {/*<h3 className={"text-xl font-bold"}>Open Account</h3>*/}
+                                <p>Explore new financial possibilities. Set up your new checking or savings accounts in minutes.</p>
                             </div>
-                            <Link to={"."} className={"flex items-center text-green-500 gap-x-1"}>
-                                <p className={"font-semibold"}>Details </p>
-                                <IoIosArrowForward size={20} className={""} />
-                            </Link>
+                            <Link to={"."}  className={"flex gap-x-1 items-center mt-4 bg-green-500 rounded-3xl text-white py-1 px-4"}><IoIosAddCircleOutline size={28} />Open account</Link>
                         </div>
-                    ))}
+                    )}
+                    {/*{user?.accounts?.map((account, index) => (*/}
+                    {/*    <div className={"flex flex-col justify-center w-full rounded-3xl bg-zinc-600 p-4 gap-y-4"} key={account.accountNumber ?? index}>*/}
+                    {/*        <div className={"flex flex-col justify-between"}>*/}
+                    {/*            <h3 className={"mb-3"}>Base Account</h3>*/}
+                    {/*            <p className={"text-2xl font-bold"}>{account.balance} {account.currency}</p>*/}
+                    {/*            <p className={"text-sm text-gray-400"}>{account.accountNumber}</p>*/}
+                    {/*        </div>*/}
+                    {/*        <Link to={"."} className={"flex items-center text-green-500 gap-x-1"}>*/}
+                    {/*            <p className={"font-semibold"}>Details </p>*/}
+                    {/*            <IoIosArrowForward size={20} className={""} />*/}
+                    {/*        </Link>*/}
+                    {/*    </div>*/}
+                    {/*))}*/}
+                    {/*{user?.accounts?.map((account, index) => (*/}
+                    {/*    <div className={"flex flex-col justify-center w-full rounded-3xl bg-zinc-600 p-4 gap-y-4"} key={account.accountNumber ?? index}>*/}
+                    {/*        <div className={"flex flex-col justify-between"}>*/}
+                    {/*            <h3 className={"mb-3"}>Base Account</h3>*/}
+                    {/*            <p className={"text-2xl font-bold"}>{account.balance} {account.currency}</p>*/}
+                    {/*            <p className={"text-sm text-gray-400"}>{account.accountNumber}</p>*/}
+                    {/*        </div>*/}
+                    {/*        <Link to={"."} className={"flex items-center text-green-500 gap-x-1"}>*/}
+                    {/*            <p className={"font-semibold"}>Details </p>*/}
+                    {/*            <IoIosArrowForward size={20} className={""} />*/}
+                    {/*        </Link>*/}
+                    {/*    </div>*/}
+                    {/*))}*/}
                 </div>
             </div>
             <div className={"flex flex-col gap-y-2"}>
                 <p className={"text-sm text-gray-400"}>Credit accounts</p>
                 <div className={"flex flex-col gap-y-2"}>
-                    <div className={"flex flex-col justify-center items-center w-full lg:max-w-sm rounded-3xl bg-zinc-600 p-4 gap-y-4"}>
+                    <div className={"flex flex-col justify-center items-center w-full rounded-3xl bg-zinc-600 p-4 gap-y-4"}>
                         <GiTakeMyMoney size={64} className={"text-green-500"} />
                         <div className={"text-center space-y-2"}>
                             <h3 className={"text-xl font-bold"}>Finance Your Dreams</h3>
