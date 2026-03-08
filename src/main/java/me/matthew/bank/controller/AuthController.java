@@ -5,6 +5,7 @@ import me.matthew.bank.entity.AccountStatus;
 import me.matthew.bank.entity.User;
 import me.matthew.bank.repository.AccountRepository;
 import me.matthew.bank.repository.UserRepository;
+import me.matthew.bank.service.AccountService;
 import me.matthew.bank.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private AccountService accountService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> body) {
@@ -63,7 +66,7 @@ public class AuthController {
         var accountList = accounts.stream()
                 .filter(acc -> acc.getStatus() != AccountStatus.CLOSED)
                 .map(acc -> Map.of(
-                        "accountNumber", acc.getAccountNumber(),
+                        "accountNumber", accountService.format(acc.getAccountNumber(), false),
                         "balance", acc.getBalance(),
                         "currency", acc.getCurrency(),
                         "status", acc.getStatus().toString()

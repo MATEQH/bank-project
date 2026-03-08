@@ -4,6 +4,7 @@ import me.matthew.bank.entity.Account;
 import me.matthew.bank.entity.AccountStatus;
 import me.matthew.bank.entity.User;
 import me.matthew.bank.repository.AccountRepository;
+import me.matthew.bank.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,13 +15,14 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
     @Autowired
     private AccountRepository accountRepo;
+    @Autowired
+    private AccountService accountService;
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestAttribute("user") User user) {
@@ -33,7 +35,7 @@ public class AccountController {
         }
 
         Account account = new Account();
-        account.setAccountNumber(UUID.randomUUID().toString());
+        account.setAccountNumber(accountService.generateNumber("117", true));
         account.setCurrency("HUF");
         account.setBalance(BigDecimal.ZERO);
         account.setStatus(AccountStatus.ACTIVE);
@@ -64,7 +66,7 @@ public class AccountController {
 
         var accountList = accounts.stream()
                 .map(acc -> Map.of(
-                        "accountNumber", acc.getAccountNumber(),
+                        "accountNumber", accountService.format(acc.getAccountNumber(), false),
                         "balance", acc.getBalance(),
                         "currency", acc.getCurrency(),
                         "status", acc.getStatus().toString()
