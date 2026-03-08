@@ -2,9 +2,25 @@ import { useAuth } from "../auth/use-auth.ts";
 import { IoIosAddCircleOutline, IoIosArrowForward } from "react-icons/io";
 import { Link } from "@tanstack/react-router";
 import { GiTakeMyMoney } from "react-icons/gi";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import type {AxiosError} from "axios";
+import {toast} from "react-toastify";
+import {createAccount} from "../auth/auth-api.ts";
 
 export const Accounts = () => {
+    const queryClient = useQueryClient();
     const { user } = useAuth();
+
+    const createAccountMutation = useMutation({
+        mutationFn: async () => await createAccount(),
+        onError: async (error: AxiosError<{message: string}>) => {
+            toast.error(error.response?.data?.message || "An error occurred");
+        },
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({queryKey: ["me"]});
+            toast.success(data?.message);
+        }
+    });
 
     return (
         <div className={"flex flex-col rounded-3xl shadow-2xl shadow-zinc-800 p-5 gap-y-4"}>
@@ -32,7 +48,12 @@ export const Accounts = () => {
                                 {/*<h3 className={"text-xl font-bold"}>Open Account</h3>*/}
                                 <p>Explore new financial possibilities. Set up your new checking or savings accounts in minutes.</p>
                             </div>
-                            <Link to={"."}  className={"flex gap-x-1 items-center mt-4 bg-green-500 rounded-3xl text-white py-1 px-4"}><IoIosAddCircleOutline size={28} />Open account</Link>
+                            <button
+                                className={"flex gap-x-1 items-center mt-4 bg-green-500 rounded-3xl text-white py-1 px-4"}
+                                onClick={() => createAccountMutation.mutate()}
+                            >
+                                <IoIosAddCircleOutline size={28} />Open account
+                            </button>
                         </div>
                     )}
                     {/*{user?.accounts?.map((account, index) => (*/}

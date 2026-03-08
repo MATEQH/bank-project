@@ -1,5 +1,3 @@
-import React from "react";
-
 const DoughnutChart = () => {
     const name: string = "A";
     const percentage: number = 100;

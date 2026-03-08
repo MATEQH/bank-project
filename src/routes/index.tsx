@@ -19,17 +19,6 @@ export const Index = () => {
         await navigate({to: "/auth/login"});
     }
 
-    const createMutation = useMutation({
-        mutationFn: async () => await createAccount(),
-        onError: async (error: AxiosError<{message: string}>) => {
-            toast.error(error.response?.data?.message || "An error occurred");
-        },
-        onSuccess: async (data) => {
-            await queryClient.invalidateQueries({queryKey: ["me"]});
-            toast.success(data?.message);
-        }
-    });
-
     const closeMutation = useMutation({
         mutationFn: async (accountNumber: string) => await closeAccount(accountNumber),
         onError: async (error: AxiosError<{message: string}>) => {

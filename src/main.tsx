@@ -30,7 +30,7 @@ export const App = () => {
                     <AppRouter/>
                 </AuthProvider>
             </QueryClientProvider>
-            <ToastContainer aria-label={"toast"} theme={"light"} position={"bottom-right"}/>
+            <ToastContainer aria-label={"toast"} theme={"dark"} position={"bottom-right"}/>
         </>
     )
 }
