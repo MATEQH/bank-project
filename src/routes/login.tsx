@@ -34,7 +34,7 @@ export const Login = () => {
     return (
         <div className={"w-full min-h-dvh flex justify-center items-center px-2"}>
             <form
-                className={"w-full max-w-md md:max-w-xl flex flex-col gap-y-4 bg-white p-8 rounded-3xl font-mono"}
+                className={"w-full max-w-md md:max-w-xl text-white flex flex-col gap-y-4 rounded-3xl shadow-2xl shadow-zinc-800 p-8 font-mono"}
                 onSubmit={(e) => {
                     e.preventDefault();
                     mutation.mutate();
@@ -47,7 +47,7 @@ export const Login = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"email"}>Email</label>
                     <input
-                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                        className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                         id={"email"}
                         type={"email"}
                         placeholder={"example@gmail.com"}
@@ -58,10 +58,10 @@ export const Login = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <div className={"flex justify-between"}>
                         <label htmlFor={"password"}>Password</label>
-                        <span className={"text-xs place-self-end hover:underline cursor-pointer text-green-500"}>Forgot your password?</span>
+                        <span className={"text-xs place-self-end hover:underline cursor-pointer text-green-600"}>Forgot your password?</span>
                     </div>
                     <input
-                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                        className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                         id={"password"}
                         type={"password"}
                         placeholder={"***********"}
@@ -70,7 +70,7 @@ export const Login = () => {
                 </div>
 
                 <button
-                    className={"bg-green-500 border rounded-2xl h-10 font-semibold transition-all duration-300 hover:scale-95 mt-8 text-white"}
+                    className={"border-green-600 border rounded-3xl shadow-2xl shadow-zinc-800 h-10 font-semibold transition-all duration-300 hover:scale-95 mt-8 text-white"}
                     disabled={mutation.isPending}>
                     {mutation.isPending ? "Loading..." : "Login"}
                 </button>

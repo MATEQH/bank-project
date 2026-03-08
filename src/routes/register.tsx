@@ -37,7 +37,7 @@ export const Register = () => {
     return (
         <div className={"w-full min-h-dvh flex justify-center items-center px-2"}>
             <form
-                className={"w-full max-w-md md:max-w-xl flex flex-col gap-y-4 bg-white p-8 rounded-3xl font-mono"}
+                className={"w-full max-w-md md:max-w-xl text-white flex flex-col gap-y-4 p-8 rounded-3xl shadow-2xl shadow-zinc-800 font-mono"}
                 onSubmit={(e) => {
                     e.preventDefault();
                     mutation.mutate();
@@ -51,7 +51,7 @@ export const Register = () => {
                     <div className={"w-full flex flex-col gap-y-2"}>
                         <label htmlFor={"firstName"}>First name</label>
                         <input
-                            className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                            className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                             id={"firstName"}
                             placeholder={"Matthew"}
                             onChange={(e) => setCredentials({...credentials, firstName: e.target.value})}
@@ -60,7 +60,7 @@ export const Register = () => {
                     <div className={"w-full flex flex-col gap-y-2"}>
                         <label htmlFor={"lastName"}>Last name</label>
                         <input
-                            className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                            className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                             id={"lastName"}
                             placeholder={"Miller"}
                             onChange={(e) => setCredentials({...credentials, lastName: e.target.value})}
@@ -71,7 +71,7 @@ export const Register = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"email"}>Email</label>
                     <input
-                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                        className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                         id={"email"}
                         type={"email"}
                         placeholder={"matthew.miller@gmail.com"}
@@ -82,7 +82,7 @@ export const Register = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"password"}>Password</label>
                     <input
-                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                        className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                         id={"password"}
                         type={"password"}
                         placeholder={"***********"}
@@ -93,7 +93,7 @@ export const Register = () => {
                 <div className={"flex flex-col gap-y-2"}>
                     <label htmlFor={"passwordConfirm"}>Password confirm</label>
                     <input
-                        className={"border rounded-xl h-8 pl-2 text-gray-600"}
+                        className={"border rounded-3xl shadow-2xl shadow-zinc-800 h-8 pl-2 text-gray-600"}
                         id={"passwordConfirm"}
                         type={"password"}
                         placeholder={"***********"}
@@ -101,7 +101,7 @@ export const Register = () => {
                     />
                 </div>
 
-                <button className={"bg-green-500 border rounded-2xl h-10 font-semibold transition-all duration-300 hover:scale-95 mt-8 text-white"} disabled={mutation.isPending}>
+                <button className={"border-green-600 border rounded-3xl shadow-2xl shadow-zinc-800 h-10 font-semibold transition-all duration-300 hover:scale-95 mt-8 text-white"} disabled={mutation.isPending}>
                     {mutation.isPending ? "Loading..." : "Register"}
                 </button>
                 <span className={"text-center"}>You already have an account? <Link className={"hover:underline"} to={"/auth/login"}>Click here</Link></span>
