@@ -27,7 +27,7 @@ const DoughnutChart = () => {
             {/* Középső címke */}
             <div className="absolute text-center">
                 <div className="text-3xl font-bold">197 597 HUF</div>
-                <div className="text-sm">Összesen</div>
+                <div className="text-sm">All</div>
             </div>
         </div>
     );
