@@ -55,6 +55,7 @@ export const Register = () => {
                             id={"firstName"}
                             placeholder={"Matthew"}
                             onChange={(e) => setCredentials({...credentials, firstName: e.target.value})}
+                            value={credentials.firstName}
                         />
                     </div>
                     <div className={"w-full flex flex-col gap-y-2"}>
@@ -64,6 +65,7 @@ export const Register = () => {
                             id={"lastName"}
                             placeholder={"Miller"}
                             onChange={(e) => setCredentials({...credentials, lastName: e.target.value})}
+                            value={credentials.lastName}
                         />
                     </div>
                 </div>
@@ -76,6 +78,7 @@ export const Register = () => {
                         type={"email"}
                         placeholder={"matthew.miller@gmail.com"}
                         onChange={(e) => setCredentials({...credentials, email: e.target.value})}
+                        value={credentials.email}
                     />
                 </div>
 
@@ -87,6 +90,7 @@ export const Register = () => {
                         type={"password"}
                         placeholder={"***********"}
                         onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                        value={credentials.password}
                     />
                 </div>
 
@@ -98,6 +102,7 @@ export const Register = () => {
                         type={"password"}
                         placeholder={"***********"}
                         onChange={(e) => setCredentials({...credentials, passwordConfirm: e.target.value})}
+                        value={credentials.passwordConfirm}
                     />
                 </div>
 

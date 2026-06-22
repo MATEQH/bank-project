@@ -1,13 +1,18 @@
 import { createRootRouteWithContext, createRoute, createRouter, Outlet, redirect } from "@tanstack/react-router";
 import type { QueryClient } from "@tanstack/react-query";
-import type { AuthContextType } from "./auth/auth-context.tsx";
 import Index from "./routes";
 import Login from "./routes/login.tsx";
 import Register from "./routes/register.tsx";
+import type {User} from "./auth/auth-api.ts";
+
+export interface RouterAuthContext {
+    user: User | null;
+    isLoading: boolean;
+}
 
 export interface RouterContext {
     queryClient: QueryClient;
-    auth: AuthContextType;
+    auth: RouterAuthContext;
 }
 
 export const rootRoute = createRootRouteWithContext<RouterContext>()({
