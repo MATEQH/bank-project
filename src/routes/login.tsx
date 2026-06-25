@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { loginRequest } from "../auth/auth-api.ts";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { useAuth } from "../auth/use-auth.ts";
-import type { AxiosError } from "axios";
-import { toast } from "react-toastify";
+import {useState} from "react";
+import {useMutation} from "@tanstack/react-query";
+import {loginRequest} from "../auth/auth-api.ts";
+import {Link, useNavigate} from "@tanstack/react-router";
+import type {AxiosError} from "axios";
+import {toast} from "react-toastify";
+import {useAppDispatch} from "../store/hooks.ts";
+import {login} from "../store/authSlice.ts";
 
 export type LoginCredentials = {
     email: string;
@@ -16,18 +17,22 @@ export const Login = () => {
         email: "",
         password: ""
     });
-    const {login} = useAuth();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: async () => await loginRequest(credentials),
-        onError: async (error: AxiosError<{message: string}>) => {
+        onError: async (error: AxiosError<{ message: string }>) => {
             toast.error(error.response?.data?.message || "An error occurred");
         },
         onSuccess: async (data) => {
             toast.success("You are now logged in");
-            await login(data.token);
-            await navigate({to: "/"});
+            try {
+                await dispatch(login(data.token));
+                await navigate({to: "/"});
+            } catch (error) {
+                toast.error("Failed to load user profile after login.");
+            }
         }
     });
 
@@ -52,6 +57,7 @@ export const Login = () => {
                         type={"email"}
                         placeholder={"example@gmail.com"}
                         onChange={(e) => setCredentials({...credentials, email: e.target.value})}
+                        value={credentials.email}
                     />
                 </div>
 
@@ -66,6 +72,7 @@ export const Login = () => {
                         type={"password"}
                         placeholder={"***********"}
                         onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                        value={credentials.password}
                     />
                 </div>
 

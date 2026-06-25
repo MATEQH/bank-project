@@ -1,14 +1,14 @@
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { FaHistory, FaRegCreditCard } from "react-icons/fa";
 import { PiInvoice } from "react-icons/pi";
-import { useAuth } from "../auth/use-auth.ts";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import {useAppSelector} from "../store/hooks.ts";
 
 export const Navbar = () => {
-    const { user } = useAuth();
+    const user = useAppSelector((state) => state.auth.user);
     const [isMenuOpened, setMenuOpened] = useState<boolean>(false);
 
     return (

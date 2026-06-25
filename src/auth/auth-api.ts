@@ -9,7 +9,7 @@ export type User = {
     accounts: Account[];
 }
 
-type Account = {
+export type Account = {
     accountNumber: string;
     balance: number;
     currency: string;
